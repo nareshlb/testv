@@ -1,0 +1,89 @@
+<div style="font-family: Arial, sans-serif; padding: 16px;">
+  <h2>API Submission New <span style="color: red; font-size: 12px;">New</span></h2>
+
+  <!-- Tabs -->
+  <div style="display: flex; gap: 20px; border-bottom: 2px solid #ccc; margin-bottom: 16px;">
+    <div *ngIf="permissions.plan" (click)="selectTab('Plan')" [style.fontWeight]="selectedTab === 'Plan' ? 'bold' : 'normal'"
+         style="cursor: pointer;">Plan</div>
+    <div *ngIf="permissions.build" (click)="selectTab('Build')" [style.fontWeight]="selectedTab === 'Build' ? 'bold' : 'normal'"
+         style="cursor: pointer;">Build</div>
+    <div *ngIf="permissions.publish" (click)="selectTab('Publish')" [style.fontWeight]="selectedTab === 'Publish' ? 'bold' : 'normal'"
+         style="cursor: pointer;">Publish</div>
+  </div>
+
+  <!-- Plan Tab Content -->
+  <div *ngIf="selectedTab === 'Plan'">
+    <!-- Cards -->
+    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+      <div style="padding: 16px; background: #E2F5EC; border-radius: 12px;">Main Sections<br><b>4</b></div>
+      <div style="padding: 16px; background: #FFE8CC; border-radius: 12px;">Leaf Sections<br><b>15</b></div>
+      <div style="padding: 16px; background: #E3F7D6; border-radius: 12px;">Draft Documents<br><b>5</b></div>
+      <div style="padding: 16px; background: #FFF8B3; border-radius: 12px;">Approved Documents<br><b>18</b></div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+      <label>Group:</label>
+      <select>
+        <option>Status</option>
+        <option>Due Date</option>
+        <option>Assignee</option>
+      </select>
+      <button style="padding: 6px 12px;">Expand All</button>
+      <input type="text" placeholder="Search" style="flex: 1; padding: 6px;">
+      <button style="padding: 6px 12px; background-color: #D9F1FC; border-radius: 6px;">+ Add</button>
+    </div>
+
+    <!-- Section Table -->
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="text-align: left;">
+          <th>Section & Title</th>
+          <th>Status</th>
+          <th>Due Date</th>
+          <th>Assigned To</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let section of sections"
+            (mouseenter)="section.hover = true"
+            (mouseleave)="section.hover = false"
+            style="border-bottom: 1px solid #eee;">
+          <td style="white-space: nowrap; overflow-x: auto;">
+            {{ section.title }}
+            <span *ngIf="section.hover" style="float: right;">
+              <button (click)="openMenu(section)" style="background: none; border: none;">⋮</button>
+              <span *ngIf="section.showMenu" style="position: absolute; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.2); padding: 8px;">
+                <div (click)="addSubsection(section)">Add Subsection</div>
+                <div (click)="renameSection(section)">Rename</div>
+                <div (click)="deleteSection(section)">Delete</div>
+              </span>
+            </span>
+          </td>
+          <td>
+            <div *ngIf="section.status">
+              <div style="width: 100px; background: #eee; border-radius: 4px;">
+                <div [style.width]="section.status + '%'" style="background: green; height: 8px; border-radius: 4px;"></div>
+              </div>
+              <span>{{ section.status }}%</span>
+            </div>
+          </td>
+          <td>
+            <input type="date" [(ngModel)]="section.dueDate" style="padding: 4px;">
+          </td>
+          <td>
+            <select [(ngModel)]="section.assignedTo" style="padding: 4px;">
+              <option *ngFor="let user of users">{{ user }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Build Tab Content -->
+  <div *ngIf="selectedTab === 'Build'">
+    <p style="font-weight: bold;">Document actions and uploads handled here...</p>
+    <!-- You can expand this with the document/text preview and actions as per your next task -->
+  </div>
+</div>
