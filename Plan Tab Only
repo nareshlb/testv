@@ -1,0 +1,175 @@
+<!-- plan-tab.component.html -->
+
+
+<div style="padding: 16px; font-family: Arial, sans-serif;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <div>
+      <button style="margin-right: 8px;">Group</button>
+      <button style="margin-right: 8px;" (click)="expandAll()">Expand All</button>
+      <input type="text" placeholder="Search..." [(ngModel)]="searchTerm" style="padding: 4px 8px; margin-right: 8px;">
+    </div>
+    <button style="background-color: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px;" (click)="addSection()">+ Add</button>
+  </div>
+
+  <div *ngFor="let section of filteredSections()" 
+       (mouseenter)="section.hover = true" 
+       (mouseleave)="section.hover = false"
+       style="display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #ccc; cursor: pointer; background-color: {{section.hover ? '#fff' : '#f9f9f9'}}">
+
+    <div style="flex: 2; overflow-x: auto; white-space: nowrap;">{{section.title}}</div>
+
+    <div style="flex: 1;">
+      <div *ngIf="section.documents.length > 0" style="height: 10px; background-color: green; width: 100px; border-radius: 4px;"></div>
+    </div>
+
+    <div style="flex: 1;">
+      <input type="date" [(ngModel)]="section.dueDate" style="padding: 2px 4px; width: 100%;">
+    </div>
+
+    <div style="flex: 1;">
+      <select [(ngModel)]="section.assignedTo" style="padding: 2px 4px; width: 100%;">
+        <option *ngFor="let user of users" [value]="user">{{user}}</option>
+      </select>
+    </div>
+
+    <div *ngIf="section.hover" style="display: flex; align-items: center; gap: 8px;">
+      <span style="cursor: pointer;">🗨️</span>
+      <div style="position: relative;">
+        <span style="cursor: pointer;">⋮</span>
+        <!-- Dropdown menu -->
+        <div style="position: absolute; top: 20px; right: 0; background: white; border: 1px solid #ccc; padding: 4px 8px; z-index: 10;">
+          <div (click)="addSubSection(section)">Add Sub Section</div>
+          <div (click)="renameSection(section)">Rename</div>
+          <div (click)="deleteSection(section)">Delete</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<-- Ts File-->
+
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-plan-tab',
+  templateUrl: './plan-tab.component.html',
+  styleUrls: ['./plan-tab.component.css']
+})
+export class PlanTabComponent {
+  searchTerm = '';
+
+  users: string[] = ['Alice', 'Bob', 'Charlie'];
+
+  sections = [
+    {
+      title: 'Introduction',
+      status: 'Complete',
+      dueDate: '2025-06-20',
+      assignedTo: 'Alice',
+      documents: ['doc1'],
+      hover: false,
+      subSections: []
+    },
+    {
+      title: 'Methodology',
+      status: 'In Progress',
+      dueDate: '2025-06-25',
+      assignedTo: 'Bob',
+      documents: [],
+      hover: false,
+      subSections: []
+    },
+    {
+      title: 'Results & Discussion',
+      status: 'Pending',
+      dueDate: '',
+      assignedTo: '',
+      documents: ['doc2', 'doc3'],
+      hover: false,
+      subSections: []
+    }
+  ];
+
+  filteredSections() {
+    if (!this.searchTerm) return this.sections;
+    return this.sections.filter(s =>
+      s.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  addSection() {
+    this.sections.push({
+      title: 'New Section',
+      status: '',
+      dueDate: '',
+      assignedTo: '',
+      documents: [],
+      hover: false,
+      subSections: []
+    });
+  }
+
+  expandAll() {
+    this.sections.forEach(section => {
+      // placeholder for expanding subsections
+      section.expanded = true;
+    });
+  }
+
+  addSubSection(section: any) {
+    const title = prompt('Enter sub-section name:');
+    if (title) {
+      section.subSections.push({
+        title,
+        dueDate: '',
+        assignedTo: '',
+        documents: [],
+        hover: false
+      });
+    }
+  }
+
+  renameSection(section: any) {
+    const newName = prompt('Enter new section title:', section.title);
+    if (newName) {
+      section.title = newName;
+    }
+  }
+
+  deleteSection(section: any) {
+    const index = this.sections.indexOf(section);
+    if (index !== -1) {
+      this.sections.splice(index, 1);
+    }
+  }
+}
+
+
+
+
+<-- Css File Plan-->
+
+
+/* plan-tab.component.css */
+
+::-webkit-scrollbar {
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+button {
+  cursor: pointer;
+}
+
+input[type='date'],
+select {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
