@@ -1,0 +1,167 @@
+// submission-tabs.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-submission-tabs',
+  templateUrl: './submission-tabs.component.html',
+  styleUrls: ['./submission-tabs.component.css']
+})
+export class SubmissionTabsComponent {
+  activeTab: 'plan' | 'build' | 'publish' = 'plan';
+}
+
+
+// submission-tabs.component.html
+<div style="padding: 16px; font-family: Arial;">
+  <div style="display: flex; gap: 16px; border-bottom: 1px solid #ccc;">
+    <button (click)="activeTab = 'plan'" [style.borderBottom]="activeTab === 'plan' ? '2px solid black' : 'none'">Plan</button>
+    <button (click)="activeTab = 'build'" [style.borderBottom]="activeTab === 'build' ? '2px solid black' : 'none'">Build</button>
+    <button (click)="activeTab = 'publish'" [style.borderBottom]="activeTab === 'publish' ? '2px solid black' : 'none'">Publish</button>
+  </div>
+
+  <div *ngIf="activeTab === 'plan'" style="margin-top: 20px;">
+    <app-plan-tab></app-plan-tab>
+  </div>
+  <div *ngIf="activeTab === 'build'" style="margin-top: 20px;">
+    <app-build-tab></app-build-tab>
+  </div>
+  <div *ngIf="activeTab === 'publish'" style="margin-top: 20px;">
+    <app-publish-tab></app-publish-tab>
+  </div>
+</div>
+
+
+// plan-tab.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-plan-tab',
+  templateUrl: './plan-tab.component.html'
+})
+export class PlanTabComponent {
+  sections = [
+    { id: 1, title: 'Section 1', status: 50, dueDate: '2025-05-10', assignedTo: 'Sophia', showMenu: false },
+    { id: 2, title: 'Section 2', status: 100, dueDate: '', assignedTo: '', showMenu: false }
+  ];
+}
+
+
+// plan-tab.component.html
+<div>
+  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+    <div>
+      <span style="margin-right: 20px;">Group:</span>
+      <span style="margin-right: 20px; cursor: pointer;">Expand All</span>
+    </div>
+    <input placeholder="Search" style="padding: 4px;" />
+    <button style="margin-left: auto;">+ Add</button>
+  </div>
+
+  <table border="1" width="100%" cellpadding="8" style="border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th>Section & Title</th>
+        <th>Status</th>
+        <th>Due Date</th>
+        <th>Assigned To</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sec of sections" (mouseenter)="sec.showMenu = true" (mouseleave)="sec.showMenu = false" style="background-color: white;">
+        <td>
+          {{ sec.title }}
+          <span *ngIf="sec.showMenu" style="margin-left: 10px; cursor: pointer;">💬</span>
+          <span *ngIf="sec.showMenu" style="margin-left: 5px; cursor: pointer;">⋮
+            <div style="position: absolute; background: white; border: 1px solid #ccc; padding: 5px;" *ngIf="sec.showMenu">
+              <div>Add Subsection</div>
+              <div>Rename</div>
+              <div>Delete</div>
+            </div>
+          </span>
+        </td>
+        <td>
+          <div style="width: 100px; background-color: #f0f0f0;">
+            <div [style.width.%]="sec.status" style="background-color: #00a884; height: 10px;"></div>
+          </div>
+        </td>
+        <td>
+          <input type="date" [(ngModel)]="sec.dueDate" />
+        </td>
+        <td>
+          <input type="text" [(ngModel)]="sec.assignedTo" placeholder="Select user" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+// build-tab.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-build-tab',
+  templateUrl: './build-tab.component.html'
+})
+export class BuildTabComponent {
+  sections = [
+    { id: 1, title: 'Section 1', files: ['510K.pdf'], text: 'IMDRF Sample Document' }
+  ];
+}
+
+
+// build-tab.component.html
+<div>
+  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+    <span>Download</span>
+    <span style="cursor: pointer;">Expand All</span>
+    <input placeholder="Search" style="padding: 4px;" />
+  </div>
+
+  <div *ngFor="let sec of sections">
+    <div style="background-color: #f9f9f9; padding: 10px; margin: 5px 0;">
+      {{ sec.title }}
+      <span style="float: right;">
+        📄 <span title="Add Document"></span>
+        ✏️ <span title="Add Text"></span>
+        💬
+      </span>
+    </div>
+    <div style="padding-left: 20px;">
+      <div>
+        📄 {{ sec.files[0] }}
+        <span style="margin-left: 10px; cursor: pointer;">⋮
+          <div style="position: absolute; background: white; border: 1px solid #ccc; padding: 5px;">
+            <div>Preview</div>
+            <div>Open</div>
+            <div>Properties</div>
+            <div>Download</div>
+            <div>Delete</div>
+          </div>
+        </span>
+      </div>
+      <div>
+        ✏️ {{ sec.text }}
+        <span style="margin-left: 10px; cursor: pointer;">⋮
+          <div style="position: absolute; background: white; border: 1px solid #ccc; padding: 5px;">
+            <div>Preview</div>
+            <div>Open</div>
+            <div>Properties</div>
+            <div>Rename</div>
+            <div>Delete</div>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+// publish-tab.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-publish-tab',
+  template: `<div style="padding: 20px;">Publish Tab content goes here.</div>`
+})
+export class PublishTabComponent {}
