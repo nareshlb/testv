@@ -1,0 +1,81 @@
+<!--
+Requirements:
+- Show a product list (downwards/vertical) as seen in the screenshot.
+- Add one more product to the right of the first product, using a horizontal (row) layout.
+- Add three-dot (kebab) icon on the right side of each product.
+- On clicking the three-dot icon, show a dropdown menu with:
+    - Download
+    - Download Report
+    - More Details
+- Use Bootstrap 5 classes & icons.
+-->
+
+<!-- Bootstrap 5 CSS CDN (include in <head>) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons CDN (include in <head>) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container mt-4">
+  <div class="row">
+    <!-- Product List (Left Side, vertical) -->
+    <div class="col-md-6">
+      <div class="list-group">
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <i class="bi bi-box-seam me-2"></i> Aspirin 300
+          </span>
+          <div class="dropdown">
+            <button class="btn btn-link p-0 text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i>Download</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-arrow-down me-2"></i>Download Report</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle me-2"></i>More Details</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <i class="bi bi-box-seam me-2"></i> Panadol 500
+          </span>
+          <div class="dropdown">
+            <button class="btn btn-link p-0 text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i>Download</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-arrow-down me-2"></i>Download Report</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle me-2"></i>More Details</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Add more products vertically as needed -->
+      </div>
+    </div>
+    <!-- Product on the Right Side -->
+    <div class="col-md-6">
+      <div class="list-group">
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <span>
+            <i class="bi bi-box-seam me-2"></i> Brufen 600
+          </span>
+          <div class="dropdown">
+            <button class="btn btn-link p-0 text-dark" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i>Download</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-arrow-down me-2"></i>Download Report</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle me-2"></i>More Details</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- Add more products horizontally as needed -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 JS CDN (include before </body>) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
