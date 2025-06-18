@@ -1,0 +1,71 @@
+HTM File
+
+
+
+<div class="form-group mb-3">
+  <label for="dossierName" class="font-weight-bold">
+    Dossier Name<span class="text-danger">*</span>
+  </label>
+  <input
+    type="text"
+    class="form-control dossier-box"
+    id="dossierName"
+    placeholder="Enter Dossier Name"
+    [(ngModel)]="dossierName"
+    required
+  />
+</div>
+
+
+
+CSS File
+
+.dossier-box {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.dossier-box:focus {
+  border-color: #00a3e0;
+  box-shadow: 0 0 0 2px rgba(0,163,224,0.15);
+}
+
+/* Responsive tweaks (optional) */
+@media (max-width: 576px) {
+  .dossier-box {
+    font-size: 0.95rem;
+    padding: 0.65rem 0.8rem;
+  }
+}
+
+
+
+TS File
+
+// For Angular
+export class DossierNameFieldComponent {
+  dossierName: string = '';
+}
+
+
+
+
+Key Points for AI
+Only generate code for the ‘Dossier Name’ field.
+Use Bootstrap for layout and responsiveness.
+Style in box mode (rounded corners, shadow, padding).
+Make sure it’s responsive (looks good on mobile).
+Use the exact label: Dossier Name (with * if required).
+Do not create the whole form or component, just this field.
+Refer to the provided design (image image1).
+5. How to Explain to AI (Summary)
+Be clear that you only want the code for one field.
+Specify the tech stack (HTML, Bootstrap, CSS, TypeScript).
+Mention “box mode” and “responsive” explicitly.
+Reference your attached image for style and layout.
+Ask for only what you need (not the whole form).
