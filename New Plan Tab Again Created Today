@@ -1,0 +1,416 @@
+HTML File
+
+
+<div class="plan-tab-container container-fluid p-3">
+  <!-- Options Row -->
+  <div class="d-flex flex-wrap align-items-center mb-3 gap-2 header-row">
+    <div class="group-by dropdown me-2">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        Group
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" (click)="groupBy='status'">By Status</a></li>
+        <li><a class="dropdown-item" (click)="groupBy='dueDate'">By Due Date</a></li>
+        <li><a class="dropdown-item" (click)="groupBy='assignee'">By Assignee</a></li>
+        <li><a class="dropdown-item" (click)="groupBy=''">None</a></li>
+      </ul>
+    </div>
+    <button class="btn btn-outline-primary me-2" (click)="expandAll()">Expand All</button>
+    <input class="form-control me-2 flex-grow-1 search-input" style="min-width:180px;max-width:250px;" type="text" placeholder="Search Sections" [(ngModel)]="searchTerm">
+    <button class="btn btn-success" (click)="addSection()">+ Add</button>
+  </div>
+
+  <!-- Table Header -->
+  <div class="row fw-semibold section-table-header d-none d-md-flex gx-0 bg-light border-bottom">
+    <div class="col-5 col-lg-4 px-2">Section & Title</div>
+    <div class="col-2 px-2">Status</div>
+    <div class="col-2 px-2">Due Date</div>
+    <div class="col-2 px-2">Assigned To</div>
+    <div class="col-1 px-2 text-end"></div>
+  </div>
+
+  <!-- Section List -->
+  <ng-container *ngIf="!groupBy; else groupedSections">
+    <ng-container *ngFor="let section of getFilteredSections()">
+      <ng-container *ngTemplateOutlet="sectionRow; context: { $implicit: section, level: 0, parent: null }"></ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-template #groupedSections>
+    <ng-container *ngFor="let g of getFilteredSections() | keyvalue">
+      <div class="fw-bold mt-3 mb-1 text-primary">{{ g.key }}</div>
+      <ng-container *ngFor="let section of g.value">
+        <ng-container *ngTemplateOutlet="sectionRow; context: { $implicit: section, level: 0, parent: null }"></ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+
+  <!-- Section Row Template -->
+  <ng-template #sectionRow let-section let-level="level" let-parent="parent">
+    <div class="row align-items-center gx-0 section-row" 
+         [ngClass]="{'section-hover': section['hovered']}"
+         (mouseenter)="section['hovered']=true" 
+         (mouseleave)="section['hovered']=false"
+         [style.background]="section['hovered'] ? '#fff' : 'inherit'">
+      <!-- Section Title + Expand Button -->
+      <div class="col-12 col-md-5 col-lg-4 d-flex align-items-center px-2" [style.paddingLeft.px]="20*level" style="overflow-x:auto;">
+        <button *ngIf="section.children && section.children.length" class="btn btn-sm btn-link p-0 me-1"
+                (click)="toggleExpand(section)">
+          <i [class]="section.expanded ? 'bi bi-dash-square-fill' : 'bi bi-plus-square-fill'"></i>
+        </button>
+        <span class="flex-grow-1" style="white-space:nowrap;">{{ section.title }}</span>
+        <!-- Comments Icon -->
+        <i *ngIf="section['hovered']" class="bi bi-chat-left-text ms-2" title="Comments"></i>
+        <!-- Actions Menu -->
+        <div *ngIf="section['hovered']" class="dropdown ms-2">
+          <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="addSection(section)">Add Sub Section</a></li>
+            <li>
+              <a class="dropdown-item" (click)="renameSection(section, prompt('Rename section:', section.title) || section.title)">Rename</a>
+            </li>
+            <li><a class="dropdown-item text-danger" (click)="deleteSection(section, parent)">Delete</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- Status -->
+      <div class="col-6 col-md-2 px-2 d-flex align-items-center" style="min-width:110px;">
+        <ng-container *ngIf="section.status; else noStatus">
+          <span class="badge"
+                [ngClass]="{
+                  'bg-success': section.status==='Completed',
+                  'bg-warning': section.status==='In Progress',
+                  'bg-secondary': section.status==='Not Started'
+                }">{{ section.status }}</span>
+        </ng-container>
+        <ng-template #noStatus><span class="text-muted small">-</span></ng-template>
+      </div>
+      <!-- Due Date -->
+      <div class="col-6 col-md-2 px-2 d-flex align-items-center">
+        <input type="date" class="form-control form-control-sm" [value]="section.dueDate" (change)="onDueDateChange(section, $event)">
+      </div>
+      <!-- Assignee -->
+      <div class="col-6 col-md-2 px-2 d-flex align-items-center">
+        <select class="form-select form-select-sm" [value]="section.assignee" (change)="onAssigneeChange(section, $event)">
+          <option [value]="null">Unassigned</option>
+          <option *ngFor="let user of users" [value]="user">{{ user }}</option>
+        </select>
+      </div>
+      <!-- Placeholder for Actions -->
+      <div class="col-1 px-2 d-none d-md-block"></div>
+    </div>
+    <!-- Sub Sections -->
+    <ng-container *ngIf="section.expanded && section.children">
+      <ng-container *ngFor="let child of section.children">
+        <ng-container *ngTemplateOutlet="sectionRow; context: { $implicit: child, level: level+1, parent: section }"></ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</div>
+
+
+
+TS File
+
+
+
+import { Component } from '@angular/core';
+
+interface Section {
+  id: number;
+  title: string;
+  status: string | null;
+  dueDate: string | null;
+  assignee: string | null;
+  parentId?: number;
+  expanded?: boolean;
+  children?: Section[];
+}
+
+@Component({
+  selector: 'app-plan-tab',
+  templateUrl: './plan-tab.component.html',
+  styleUrls: ['./plan-tab.component.css']
+})
+export class PlanTabComponent {
+  sections: Section[] = [
+    {
+      id: 1,
+      title: 'Section 1',
+      status: 'Completed',
+      dueDate: '2025-06-20',
+      assignee: 'John Doe',
+      expanded: false,
+      children: [
+        {
+          id: 2,
+          title: 'Section 1.1',
+          status: 'In Progress',
+          dueDate: '2025-06-22',
+          assignee: 'Jane Smith',
+          parentId: 1,
+          expanded: false,
+          children: [
+            {
+              id: 3,
+              title: 'Section 1.1.1',
+              status: null,
+              dueDate: null,
+              assignee: null,
+              parentId: 2,
+              expanded: false,
+              children: []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 4,
+      title: 'Section 2',
+      status: null,
+      dueDate: null,
+      assignee: null,
+      expanded: false,
+      children: []
+    }
+  ];
+
+  groupBy: string = '';
+  searchTerm: string = '';
+
+  users = ['John Doe', 'Jane Smith', 'Alex Johnson'];
+
+  addSection(parent?: Section) {
+    const newSection: Section = {
+      id: Date.now(),
+      title: 'New Section',
+      status: null,
+      dueDate: null,
+      assignee: null,
+      expanded: false,
+      children: []
+    };
+    if (parent) {
+      parent.children = parent.children || [];
+      parent.children.push(newSection);
+      parent.expanded = true;
+    } else {
+      this.sections.push(newSection);
+    }
+  }
+
+  renameSection(section: Section, newTitle: string) {
+    section.title = newTitle;
+  }
+
+  deleteSection(section: Section, parent?: Section) {
+    if (parent && parent.children) {
+      parent.children = parent.children.filter(s => s.id !== section.id);
+    } else {
+      this.sections = this.sections.filter(s => s.id !== section.id);
+    }
+  }
+
+  expandAll() {
+    const expand = (sections: Section[]) => {
+      for (let sec of sections) {
+        sec.expanded = true;
+        if (sec.children && sec.children.length) expand(sec.children);
+      }
+    }
+    expand(this.sections);
+  }
+
+  toggleExpand(section: Section) {
+    section.expanded = !section.expanded;
+  }
+
+  getFilteredSections() {
+    let sections = [...this.sections];
+
+    // Search filter
+    if (this.searchTerm) {
+      const filter = (sections: Section[]): Section[] => {
+        return sections
+          .map(s => ({
+            ...s,
+            children: s.children ? filter(s.children) : []
+          }))
+          .filter(
+            s =>
+              s.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+              (s.children && s.children.length)
+          );
+      }
+      sections = filter(sections);
+    }
+
+    // Grouping
+    if (this.groupBy) {
+      const grouped: { [key: string]: Section[] } = {};
+      const groupKey = (section: Section) => {
+        switch (this.groupBy) {
+          case 'status': return section.status || 'No Status';
+          case 'dueDate': return section.dueDate || 'No Due Date';
+          case 'assignee': return section.assignee || 'Unassigned';
+        }
+        return '';
+      };
+      const flatSections = (secs: Section[]): Section[] =>
+        secs.reduce((acc, s) => [...acc, s, ...(s.children ? flatSections(s.children) : [])], []);
+      for (const section of flatSections(sections)) {
+        const key = groupKey(section);
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(section);
+      }
+      return grouped;
+    }
+
+    return sections;
+  }
+
+  onDueDateChange(section: Section, event: any) {
+    section.dueDate = event.target.value;
+  }
+
+  onAssigneeChange(section: Section, event: any) {
+    section.assignee = event.target.value;
+  }
+
+  // Action menu logic can be extended as needed.
+}
+
+
+CSS File 
+
+
+
+.plan-tab-container {
+  box-sizing: border-box;
+  background: #f8f9fa;
+  border-radius: 8px;
+  min-height: 400px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow-x: auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+.header-row > * {
+  margin-bottom: 0 !important;
+}
+.section-table-header {
+  border-radius: 8px 8px 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.section-row {
+  border-bottom: 1px solid #e9ecef;
+  transition: background 0.2s;
+  min-height: 54px;
+  position: relative;
+}
+.section-row.section-hover,
+.section-row:hover {
+  background: #fff;
+  z-index: 1;
+}
+.section-row .dropdown-menu {
+  min-width: 170px;
+}
+.section-row .dropdown-toggle::after {
+  display: none;
+}
+.badge {
+  font-size: 0.95em;
+  padding: 0.4em 0.7em;
+}
+@media (max-width: 991.98px) {
+  .section-row .col-2,
+  .section-row .col-1 {
+    font-size: 0.97em;
+    min-width: 110px;
+  }
+  .section-table-header > .col-2,
+  .section-table-header > .col-1 {
+    min-width: 110px;
+  }
+}
+@media (max-width: 767.98px) {
+  .plan-tab-container {
+    padding: 2px !important;
+    min-width: 100vw;
+  }
+  .section-table-header {
+    display: none !important;
+  }
+  .section-row {
+    flex-direction: column;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+  .section-row > div {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-bottom: 5px;
+  }
+  .header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px !important;
+  }
+  .plan-tab-container {
+    min-width: 0;
+    padding: 0.5rem !important;
+  }
+}
+
+.search-input {
+  max-width: 250px;
+}
+
+::-webkit-scrollbar {
+  height: 7px;
+  background: #f6f6f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  border-radius: 8px;
+}
+
+
+
+
+angular.json File
+
+<!--
+Be sure to include Bootstrap and Bootstrap Icons in your angular.json or index.html:
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+  "src/styles.css"
+],
+"scripts": [
+  "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+]
+-->
+
+
+
+Instructions & Notes:
+
+This is a fully responsive Angular component using Bootstrap 5 and Bootstrap Icons.
+All logic for grouping, expanding, searching, and inline editing is included in the TypeScript.
+Horizontal scroll for section titles is enabled (overflow-x:auto).
+Use <app-plan-tab></app-plan-tab> to embed this component.
+Make sure to update angular.json to include Bootstrap and Bootstrap Icons as shown in the snippet above.
+The row highlights and action menus appear on hover. Action menu contains "Add Sub Section", "Rename", and "Delete".
+"Expand All", "Group", "Search", and "+Add" are all on the same row and responsive.
+Each section can be expanded or collapsed individually or all at once.
+The "Group" menu groups sections by Status, Due Date, or Assignee.
+On small screens, the layout stacks for mobile usability.
+All section management (add, rename, delete, expand, assign, due date) is possible from this tab.
