@@ -79,3 +79,19 @@ Requirements:
 
 <!-- Bootstrap 5 JS CDN (include before </body>) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+How it works:
+
+Each product is shown as a row in a Bootstrap list-group.
+Products are arranged vertically on the left (col-md-6) and horizontally on the right by using Bootstrap's grid system.
+The three-dot (vertical kebab) is a Bootstrap Icon (bi-three-dots-vertical). Clicking it opens a dropdown with Download, Download Report, and More Details.
+You can add more products by duplicating the <div class="list-group-item ...">.
+References used:
+
+Bootstrap 5 Dropdowns
+Bootstrap Icons Three dots
+Let me know if you want a single row with two products side-by-side, or more complex arrangements!
