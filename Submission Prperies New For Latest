@@ -1,0 +1,297 @@
+ HTML File
+
+
+<div
+  class="modal fade show d-block"
+  tabindex="-1"
+  *ngIf="visible"
+  style="background:rgba(0,0,0,0.3);"
+  aria-modal="true"
+  role="dialog"
+>
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-content box-modal">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-semibold">Submission Properties</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="onClose()"
+        ></button>
+      </div>
+      <div class="modal-body pt-0">
+        <div class="submission-properties-table">
+          <div class="row property-row" *ngFor="let row of [
+            { label: 'Product', value: properties.product },
+            { label: 'Country', value: properties.country },
+            { label: 'Application Type', value: properties.applicationType },
+            { label: 'Submission Type', value: properties.submissionType },
+            { label: 'Submission Sub Type', value: properties.submissionSubType },
+            { label: 'Dossier Name', value: properties.dossierName },
+            { label: 'Status', value: properties.status, editable: true, editField: 'status' },
+            { label: 'Version', value: properties.version },
+            { label: 'Updated By', value: properties.updatedBy },
+            { label: 'Updated On', value: properties.updatedOn },
+            { label: 'Due Date', value: properties.dueDate, editable: true, editField: 'dueDate' },
+            { label: 'Description', value: properties.description, editable: true, editField: 'description' }
+          ]">
+            <div class="col-6 label-col">
+              <span [ngClass]="{'fw-semibold': row.label === 'Dossier Name' || row.label === 'Version' || row.label === 'Updated On'}">
+                {{ row.label }}
+              </span>
+            </div>
+            <div class="col-1 text-center">:</div>
+            <div class="col-5 value-col d-flex align-items-center">
+              <ng-container *ngIf="row.editable; else normalProp">
+                <ng-container [ngSwitch]="row.editField">
+                  <ng-container *ngSwitchCase="'status'">
+                    <ng-container *ngIf="isEditingStatus; else statusDisplay">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="tempStatus"
+                        style="width: 85%; display:inline-block;"
+                      />
+                      <button class="btn btn-link p-0 ms-1" (click)="saveEdit('status')" title="Save">
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button class="btn btn-link p-0 ms-1" (click)="cancelEdit('status')" title="Cancel">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </ng-container>
+                    <ng-template #statusDisplay>
+                      <span>{{ properties.status }}</span>
+                      <button class="btn btn-link p-0 ms-2" (click)="startEdit('status')" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </ng-template>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'dueDate'">
+                    <ng-container *ngIf="isEditingDueDate; else dueDateDisplay">
+                      <input
+                        type="date"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="tempDueDate"
+                        style="width: 85%; display:inline-block;"
+                      />
+                      <button class="btn btn-link p-0 ms-1" (click)="saveEdit('dueDate')" title="Save">
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button class="btn btn-link p-0 ms-1" (click)="cancelEdit('dueDate')" title="Cancel">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </ng-container>
+                    <ng-template #dueDateDisplay>
+                      <span>{{ properties.dueDate }}</span>
+                      <button class="btn btn-link p-0 ms-2" (click)="startEdit('dueDate')" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </ng-template>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'description'">
+                    <ng-container *ngIf="isEditingDescription; else descriptionDisplay">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        [(ngModel)]="tempDescription"
+                        style="width: 85%; display:inline-block;"
+                      />
+                      <button class="btn btn-link p-0 ms-1" (click)="saveEdit('description')" title="Save">
+                        <i class="bi bi-check-lg"></i>
+                      </button>
+                      <button class="btn btn-link p-0 ms-1" (click)="cancelEdit('description')" title="Cancel">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </ng-container>
+                    <ng-template #descriptionDisplay>
+                      <span>{{ properties.description }}</span>
+                      <button class="btn btn-link p-0 ms-2" (click)="startEdit('description')" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                    </ng-template>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <ng-template #normalProp>
+                <span>{{ row.value }}</span>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-light w-100" (click)="onClose()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+CSS File
+
+
+.box-modal {
+  border-radius: 16px;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.15);
+  padding: 0;
+  border: 1.5px solid #d2d2d2;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  max-width: 420px;
+}
+
+.modal-header {
+  border-bottom: 0;
+  padding-bottom: 0.5rem;
+}
+.modal-title {
+  font-size: 1.11rem;
+}
+.submission-properties-table {
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.property-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  font-size: 0.98rem;
+}
+.label-col {
+  flex: 0 0 40%;
+  color: #575757;
+  word-break: break-word;
+}
+.value-col {
+  flex: 0 0 55%;
+  word-break: break-word;
+  min-width: 0;
+}
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 96vw !important;
+    margin: 1.5rem auto;
+  }
+  .box-modal {
+    border-radius: 9px;
+    font-size: 0.98rem;
+  }
+  .property-row {
+    font-size: 0.93rem;
+  }
+}
+.btn-link {
+  color: #333;
+  text-decoration: none;
+}
+.btn-link:hover {
+  color: #1a73e8;
+  text-decoration: underline;
+}
+input.form-control-sm {
+  background: #f7f7f7;
+  border: 1px solid #c3c3c3;
+  border-radius: 3px;
+  font-size: 0.96rem;
+}
+
+
+TS File
+
+
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+export interface SubmissionProperties {
+  product: string;
+  country: string;
+  applicationType: string;
+  submissionType: string;
+  submissionSubType: string;
+  dossierName: string;
+  status: string;
+  version: string;
+  updatedBy: string;
+  updatedOn: string;
+  dueDate: string;
+  description: string;
+}
+
+@Component({
+  selector: 'app-submission-properties',
+  templateUrl: './submission-properties.component.html',
+  styleUrls: ['./submission-properties.component.css']
+})
+export class SubmissionPropertiesComponent {
+  @Input() visible: boolean = false;
+  @Input() properties!: SubmissionProperties;
+  @Output() close = new EventEmitter<void>();
+
+  isEditingStatus: boolean = false;
+  isEditingDueDate: boolean = false;
+  isEditingDescription: boolean = false;
+
+  tempStatus: string = '';
+  tempDueDate: string = '';
+  tempDescription: string = '';
+
+  startEdit(field: string) {
+    if (field === 'status') {
+      this.isEditingStatus = true;
+      this.tempStatus = this.properties.status;
+    }
+    if (field === 'dueDate') {
+      this.isEditingDueDate = true;
+      this.tempDueDate = this.properties.dueDate;
+    }
+    if (field === 'description') {
+      this.isEditingDescription = true;
+      this.tempDescription = this.properties.description;
+    }
+  }
+
+  saveEdit(field: string) {
+    if (field === 'status') {
+      this.properties.status = this.tempStatus;
+      this.isEditingStatus = false;
+    }
+    if (field === 'dueDate') {
+      this.properties.dueDate = this.tempDueDate;
+      this.isEditingDueDate = false;
+    }
+    if (field === 'description') {
+      this.properties.description = this.tempDescription;
+      this.isEditingDescription = false;
+    }
+  }
+
+  cancelEdit(field: string) {
+    if (field === 'status') this.isEditingStatus = false;
+    if (field === 'dueDate') this.isEditingDueDate = false;
+    if (field === 'description') this.isEditingDescription = false;
+  }
+
+  onClose() {
+    this.close.emit();
+  }
+}
+
+
+
+
+
+More detail
+
+Usage/Integration:
+
+Import and use <app-submission-properties [visible]="showModal" [properties]="submissionItem" (close)="showModal=false"></app-submission-properties> in your parent component.
+Replace submissionItem with your actual data.
+Make sure to add Bootstrap CSS and optionally Bootstrap Icons (for pencil/check/cross icons).
+Features:
+
+Responsive modal using Bootstrap + custom box model.
+Editable Status, Due Date, and Description fields inline.
+All fields displayed in a property grid style.
+Mobile friendly and visually matches the given image.
