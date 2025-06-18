@@ -1,0 +1,215 @@
+<--HTML-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submission Properties Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="submission-header">
+    <span id="submissionName">Submission A</span>
+    <span id="submissionStatus" class="status">Draft</span>
+    <button id="menuBtn">☰</button>
+  </div>
+
+  <div id="propertiesPopup" class="popup hidden">
+    <div class="popup-content">
+      <h2>Submission Properties</h2>
+      <form id="propertiesForm">
+        <label>
+          Product:
+          <span id="productField">Product X</span>
+        </label>
+        <label>
+          Country:
+          <span id="countryField">Country Y</span>
+        </label>
+        <label>
+          Status:
+          <select id="statusField">
+            <option value="Draft">Draft</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Approved">Approved</option>
+          </select>
+        </label>
+        <label>
+          Due Date:
+          <input type="date" id="dueDateField" />
+        </label>
+        <label>
+          Description:
+          <textarea id="descriptionField"></textarea>
+        </label>
+        <div class="popup-actions">
+          <button type="button" id="saveBtn">Save</button>
+          <button type="button" id="closeBtn">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
+
+
+
+<--Css-->
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  background: #f5f5f5;
+}
+
+.submission-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #fff;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  max-width: 500px;
+}
+
+.status {
+  background: #eee;
+  color: #333;
+  padding: 0.2rem 0.7rem;
+  border-radius: 1em;
+  font-size: 0.95em;
+}
+
+#menuBtn {
+  margin-left: auto;
+  font-size: 1.2em;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  min-width: 340px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.16);
+}
+
+.popup-content h2 {
+  margin-top: 0;
+}
+
+#propertiesForm label {
+  display: block;
+  margin-bottom: 1em;
+}
+
+#propertiesForm input,
+#propertiesForm select,
+#propertiesForm textarea {
+  margin-left: 1.2em;
+  padding: 0.3em;
+  width: 60%;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+#propertiesForm textarea {
+  resize: vertical;
+  height: 3em;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 1em;
+  justify-content: flex-end;
+}
+
+
+<--TS File-->
+
+// Submission data model
+interface Submission {
+  name: string;
+  status: string;
+  product: string;
+  country: string;
+  dueDate: string;
+  description: string;
+}
+
+// Initial data
+let submission: Submission = {
+  name: "Submission A",
+  status: "Draft",
+  product: "Product X",
+  country: "Country Y",
+  dueDate: "2025-07-01",
+  description: "Initial submission for review."
+};
+
+// Elements
+const menuBtn = document.getElementById('menuBtn') as HTMLButtonElement;
+const popup = document.getElementById('propertiesPopup') as HTMLDivElement;
+const closeBtn = document.getElementById('closeBtn') as HTMLButtonElement;
+const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
+const submissionStatus = document.getElementById('submissionStatus') as HTMLSpanElement;
+
+// Form fields
+const productField = document.getElementById('productField') as HTMLSpanElement;
+const countryField = document.getElementById('countryField') as HTMLSpanElement;
+const statusField = document.getElementById('statusField') as HTMLSelectElement;
+const dueDateField = document.getElementById('dueDateField') as HTMLInputElement;
+const descriptionField = document.getElementById('descriptionField') as HTMLTextAreaElement;
+
+// Populate popup fields with current data
+function populateFields() {
+  productField.innerText = submission.product;
+  countryField.innerText = submission.country;
+  statusField.value = submission.status;
+  dueDateField.value = submission.dueDate;
+  descriptionField.value = submission.description;
+}
+
+// Show popup
+menuBtn.addEventListener('click', () => {
+  populateFields();
+  popup.classList.remove('hidden');
+});
+
+// Close popup
+closeBtn.addEventListener('click', () => {
+  popup.classList.add('hidden');
+});
+
+// Save changes
+saveBtn.addEventListener('click', () => {
+  submission.status = statusField.value;
+  submission.dueDate = dueDateField.value;
+  submission.description = descriptionField.value;
+  submissionStatus.textContent = submission.status;
+  popup.classList.add('hidden');
+});
+
+// Optional: Close popup when clicking outside
+popup.addEventListener('click', (e) => {
+  if (e.target === popup) popup.classList.add('hidden');
+});
