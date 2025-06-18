@@ -1,0 +1,122 @@
+It sounds like you want to learn how to instruct AI (like Copilot or ChatGPT) to help you create tasks for your running project in your company. You also want to know how to explain tasks deeply to the AI so that it generates proper, responsive code or task lists.
+
+Below is a deep explanation and some practical steps to help you communicate effectively with AI for such use cases:
+
+1. Be Specific About the Task
+Bad Example:
+"Create a login page"
+
+Good Example:
+"Create a responsive login page in React that has email and password fields, a 'Remember Me' checkbox, and a 'Forgot password?' link. It should validate the email format and password length (min 8 characters). Show error messages under each field if validation fails. Use Material-UI for styling."
+
+Why?
+The more details you give, the better the AI can help you. Mention frameworks, libraries, validation, UI/UX, etc.
+
+2. Describe the Context and Goals
+Example:
+"This task is part of our company's employee portal project. The login page should fit with our existing blue color scheme (#123456), and the logo should appear at the top. The goal is to let employees securely log in to access their dashboard."
+Why?
+Context helps AI align its suggestions with your company’s requirements and style.
+
+3. Specify Expected Output and Format
+Example:
+"Please generate the React component code for the login page, and also provide a CSS file for custom styles. Show sample data for testing. The output should be compatible with React 18."
+Why?
+Tells AI what kind of output you want (code, documentation, task list, etc.).
+
+4. Ask for Explanation or Reasoning
+Example:
+"After you provide the code, please explain how the validation works and how the responsive layout is achieved."
+Why?
+You’ll get not just code, but also a deeper understanding of the logic and approach.
+
+5. Sample Prompt for Creating a Responsive Task
+Code
+I'm working on our company's employee portal (React, Material-UI). Please create a responsive 'Leave Application' form with the following fields:
+- Employee Name (auto-filled)
+- Leave Type (dropdown: Sick, Casual, Earned)
+- Start Date, End Date (date pickers)
+- Reason (multiline textbox)
+- Submit and Cancel buttons
+
+Requirements:
+- Validate that Start Date is not after End Date
+- Show errors if required fields are empty
+- On submit, show a success message and reset the form
+- The form should look good on desktop and mobile
+
+After giving the code, explain the validation logic and how you ensured responsiveness.
+6. Tips for Effective AI Instructions
+Break Down Large Tasks: If a task is big, split it into smaller steps.
+Ask for Explanations: Request the AI to explain tricky parts of the code.
+Iterate: If output isn’t perfect, ask follow-up questions or clarify requirements.
+7. How to Explain Tasks to AI: Example Structure
+What is the task?
+(Clear task description)
+Where does it fit?
+(Project context, dependencies)
+What are the requirements?
+(UI, validation, business logic, libraries)
+How should it behave?
+(User interaction, error handling)
+What is the expected output?
+(Code, explanation, test cases, etc.)
+8. Sample Conversation
+You:
+"Please generate a Python script that reads employee leave data from a CSV file and emails a summary to HR. Explain how the script works and how I can schedule it to run daily."
+
+AI:
+(Provides script and a detailed explanation of the logic, plus instructions on scheduling with cron.)
+
+Summary Table
+Step	What to Include	Example
+Task	Clear description	"Create login page"
+Context	Project/company info	"For employee portal"
+Requirements	Details, libraries	"React, Material-UI, valid."
+Output	Code, docs, tasks	"React code, CSS file"
+Ask Explain	Request explanations	"Explain validation logic"
+If you give instructions to AI using the structure above, you'll get high-quality, responsive code and task instructions tailored to your project and company needs.
+
+If you have a specific task or example, share it, and I can demonstrate how to prompt the AI and explain the generated code or tasks!
+
+
+
+1. Clearly State the Dynamic Nature
+Tell the AI what should be dynamic or variable.
+Example:
+
+"Create a dashboard where the list of projects updates automatically as new projects are added to the database."
+
+2. Describe the Inputs and Outputs
+Inputs: What data or conditions will affect the task?
+"The user selects a category, and the list should filter to show only projects in that category."
+Outputs: What should the task produce?
+"Display the filtered project list with project names and statuses."
+3. Explain the Triggers or Conditions
+Explain what causes the task to change.
+Example:
+
+"When a user clicks 'Load More', fetch the next 10 projects from the server and append them to the list."
+
+4. Request Code with Explanation
+Ask the AI for code that handles these dynamics and for an explanation.
+Prompt Example:
+
+"Write a React component that fetches and displays a list of tasks from an API. The list should update whenever the user clicks a 'Refresh' button. Explain how the component updates the data and how you handle loading states."
+
+5. Ask for Extensibility
+If you want the solution to be easily adaptable for future changes, mention it:
+
+"Make the code modular so that I can easily add more filters in the future. Explain how I can extend it."
+
+Sample Dynamic Task Prompt
+"I need to create a dynamic to-do list. Each task can be marked as completed, edited, or deleted. The list should update in real-time if another user adds a task (simulate with a timer for now). Please provide the React code and explain how the real-time updates are handled. Make sure the UI is responsive."
+
+Summary Table
+What to Include	Example
+Dynamic element	"Updates when database changes"
+Inputs/Triggers	"User selects category", "User clicks Refresh"
+Output/Result	"Filtered project list", "Updated to-do list"
+Request for explanation	"Explain how real-time updates work"
+Extensibility	"Make code modular for adding more filters in the future"
+If you provide a specific dynamic task scenario, I can show you exactly how to describe it to the AI and what kind of answer you should expect! Let me know if you want a demonstration.
